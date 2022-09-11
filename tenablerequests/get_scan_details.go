@@ -41,18 +41,11 @@ type ScanDetails struct {
 		ScannerEnd      interface{} `json:"scanner_end"`
 	} `json:"info"`
 	// removed plural from return object as this is intended to run for scans with 1 host object. and it looks cleaner this way .
-	Hosts           []Host `json:"hosts"`
-	Vulnerabilities []struct {
-		Count        int    `json:"count"`
-		PluginID     int    `json:"plugin_id"`
-		PluginName   string `json:"plugin_name"`
-		Severity     int    `json:"severity"`
-		PluginFamily string `json:"plugin_family"`
-		VulnIndex    int    `json:"vuln_index"`
-	} `json:"vulnerabilities"`
-	Comphosts  []interface{} `json:"comphosts"`
-	Compliance []interface{} `json:"compliance"`
-	Filters    []struct {
+	Hosts           []Host          `json:"hosts"`
+	Vulnerabilities []Vulnerability `json:"vulnerabilities"`
+	Comphosts       []interface{}   `json:"comphosts"`
+	Compliance      []interface{}   `json:"compliance"`
+	Filters         []struct {
 		Name         string `json:"name"`
 		ReadableName string `json:"readable_name"`
 		Control      struct {
@@ -243,6 +236,15 @@ type Host struct {
 	High      int `json:"high"`
 	Critical  int `json:"critical"`
 	HostIndex int `json:"host_index"`
+}
+
+type Vulnerability struct {
+	Count        int    `json:"count"`
+	PluginID     int    `json:"plugin_id"`
+	PluginName   string `json:"plugin_name"`
+	Severity     int    `json:"severity"`
+	PluginFamily string `json:"plugin_family"`
+	VulnIndex    int    `json:"vuln_index"`
 }
 
 func GetScanDetails(scanID int, historyID int) (ScanDetails, error) {
