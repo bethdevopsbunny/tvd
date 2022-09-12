@@ -10,6 +10,7 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
+	"sort"
 	"strconv"
 	tReq "tvl/tenablerequests"
 )
@@ -19,6 +20,7 @@ var alertThresholdList []string
 var alertThresholdListInt []int
 var VerboseLogging *int
 var exitWithError *bool
+var top *int
 var scanTimeout int = 100
 
 var ApiKey string
@@ -80,6 +82,7 @@ func main() {
 	low := flag.Bool("low", true, "if set to false will omit low results")
 	exitWithError = flag.Bool("exit-with-error", false, "returns errorcode 1 if increase to vulnerabilities")
 	noScan := flag.Bool("no-scan", false, "runs diff without triggering a new scan")
+	top = flag.Int("top", 30, "clamp the number of vulnerabilities returned in NewVulnerabilities")
 
 	flag.Parse()
 
@@ -197,6 +200,8 @@ func main() {
 
 	filteredVulnerabilityDifference := alertThresholdFilterVulnerabilityCount(diffVulnerabilityCount)
 	filteredDiffVulnerabilities := alertThresholdFilterVulnerabilities(diffVulnerabilities)
+	filteredDiffVulnerabilities = SortVulnerabilities(filteredDiffVulnerabilities)
+	filteredDiffVulnerabilities = filteredDiffVulnerabilities[:*top]
 
 	response, err := json.Marshal(
 		returnvalue{
@@ -234,6 +239,16 @@ func vulnerabilityCounter(details tReq.ScanDetails) VulnerabilityCount {
 	return returnCount
 }
 
+func SortVulnerabilities(vulnerabilities []tReq.Vulnerability) []tReq.Vulnerability {
+
+	sort.Slice(
+		vulnerabilities, func(i, j int) bool {
+			return vulnerabilities[i].Severity > vulnerabilities[j].Severity
+		},
+	)
+	return vulnerabilities
+}
+
 //LoggingDiff Qualifies if results in the diff are worth being and asked to be logged.
 func LoggingDiff(diffVulnerabilityCount VulnerabilityCount) {
 
@@ -258,10 +273,10 @@ func LoggingDiff(diffVulnerabilityCount VulnerabilityCount) {
 //outLogDiff Displays Desired Output Log with exitWithError
 func outLogDiff(alertThreshold string) {
 	if *exitWithError {
-		log.Errorf("The Script found an increase to %s vulnerabilites\n", alertThreshold)
+		log.Errorf("The Script found an increase to %s vulnerabilities\n", alertThreshold)
 		os.Exit(1)
 	} else {
-		log.Warnf("The Script found an increase to %s vulnerabilites\n", alertThreshold)
+		log.Warnf("The Script found an increase to %s vulnerabilities\n", alertThreshold)
 	}
 }
 

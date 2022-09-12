@@ -9,7 +9,7 @@ compares the number of vulnerabilities each have and alerts if the current scan 
  authentication is handled by storing a tenable api key in an environment variable TENABLE_API_KEY 
     
 
-### use
+## arguments
 
 `-critical <bool>` - if set to false will omit critical results (default true)<br>
 `-exit-with-error <bool>` - returns errorcode 1 if increase to vulnerabilities <br>
@@ -19,4 +19,5 @@ compares the number of vulnerabilities each have and alerts if the current scan 
 `-scan-name <string>` - Target scan you wish to compare <br>
 `-verbose <int>` - Displays Logging 1 or 2 for light or heavy log output <br>
 `-no-scan <bool>` - runs the diff without triggering a new scan <br>
+`-top <int>` clamp the number of vulnerabilities returned in NewVulnerabilities <br>
 
