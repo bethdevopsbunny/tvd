@@ -1,4 +1,4 @@
-package tenablerequests
+package tenablerequest
 
 import (
 	"encoding/json"
