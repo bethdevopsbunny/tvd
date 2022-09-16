@@ -209,8 +209,6 @@ returns json object with count difference and list of vulnerabilities listed in 
 
 		diffVulnerabilityCount := diffVulnerabilityCounts(currentCount, previousCount)
 
-		LoggingDiff(diffVulnerabilityCount)
-
 		filteredVulnerabilityDifference := alertThresholdFilterVulnerabilityCount(diffVulnerabilityCount)
 		filteredDiffVulnerabilities := alertThresholdFilterVulnerabilities(diffVulnerabilities)
 		filteredDiffVulnerabilities = SortVulnerabilities(filteredDiffVulnerabilities)
@@ -229,9 +227,11 @@ returns json object with count difference and list of vulnerabilities listed in 
 			log.Errorf("Failed to marshal diff count output")
 			os.Exit(1)
 		}
-
+		LoggingDiff(diffVulnerabilityCount)
 		fmt.Println(string(response))
-
+		if exitWithError {
+			os.Exit(1)
+		}
 	},
 }
 
@@ -303,7 +303,6 @@ func LoggingDiff(diffVulnerabilityCount VulnerabilityCount) {
 func outLogDiff(alertThreshold string) {
 	if exitWithError {
 		log.Errorf("The Script found an increase to %s vulnerabilities\n", alertThreshold)
-		os.Exit(1)
 	} else {
 		log.Warnf("The Script found an increase to %s vulnerabilities\n", alertThreshold)
 	}
