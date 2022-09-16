@@ -29,3 +29,33 @@ tvd run [flags]
 | --top        | -t         | int    |clamp the number of vulnerabilities <br/> returned in NewVulnerabilities | 30      | no        |
 | --verbose    | -v         | int    |Displays Logging                                        | 0       | no        |
 
+### ci example
+
+```
+version: 2.1
+jobs:
+  launch_tvd:
+    docker:
+      - image: cimg/go:1.19.1
+    steps:
+
+      - checkout
+
+      - run:
+          name: "tvd download"
+          command: |
+            sudo wget https://github.com/bethdevopsbunny/tvd/releases/download/v0.1/tvd.linux -O /usr/local/bin/tvd
+            sudo chmod +x /usr/local/bin/tvd
+
+      - run:
+          name: "tvd run"
+          command: |
+           tvd run --scan-name << pipeline.scan-name >> --no-scan=true --verbose=1 --exit-with-error=true | jq  
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - launch_tvd
+
+```
