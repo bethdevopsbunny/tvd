@@ -318,14 +318,18 @@ func alertThresholdFilterVulnerabilityCount(diffVulnerabilityCount Vulnerability
 		Low:      formatInt32(diffVulnerabilityCount.Low),
 	}
 
-	switch {
-	case !contains(alertThresholdList, "Critical"):
+	// switch statements auto break and don't have a non break option?
+	// what a crazy world.
+	if !contains(alertThresholdList, "Critical") {
 		strStruct.Critical = ""
-	case !contains(alertThresholdList, "High"):
+	}
+	if !contains(alertThresholdList, "High") {
 		strStruct.High = ""
-	case !contains(alertThresholdList, "Medium"):
+	}
+	if !contains(alertThresholdList, "Medium") {
 		strStruct.Medium = ""
-	case !contains(alertThresholdList, "Low"):
+	}
+	if !contains(alertThresholdList, "Low") {
 		strStruct.Low = ""
 	}
 
