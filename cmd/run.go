@@ -15,6 +15,7 @@ var scanHistory req.ScanHistory
 var alertThresholdList []string
 var alertThresholdListInt []int
 var scanTimeout = 100
+var alerted = false
 
 var ApiKey string
 
@@ -227,9 +228,9 @@ returns json object with count difference and list of vulnerabilities listed in 
 			log.Errorf("Failed to marshal diff count output")
 			os.Exit(1)
 		}
-		loggingDiff(diffVulnerabilityCount)
+		doesItDiff(diffVulnerabilityCount)
 		fmt.Println(string(response))
-		if exitWithError {
+		if exitWithError && alerted {
 			os.Exit(1)
 		}
 	},
@@ -279,21 +280,25 @@ func sortVulnerabilities(vulnerabilities []req.Vulnerability) []req.Vulnerabilit
 	return vulnerabilities
 }
 
-//loggingDiff Qualifies if results in the diff are worth being and asked to be logged.
-func loggingDiff(diffVulnerabilityCount VulnerabilityCount) {
+//doesItDiff Qualifies if there are diffs in the diff and if the user wants them alerted.
+func doesItDiff(diffVulnerabilityCount VulnerabilityCount) {
 
 	for _, alertThreshold := range alertThresholdList {
 
 		if alertThreshold == "Critical" && diffVulnerabilityCount.Critical > 0 {
+			alerted = true
 			outLogDiff(alertThreshold)
 		}
 		if alertThreshold == "High" && diffVulnerabilityCount.High > 0 {
+			alerted = true
 			outLogDiff(alertThreshold)
 		}
 		if alertThreshold == "Medium" && diffVulnerabilityCount.Medium > 0 {
+			alerted = true
 			outLogDiff(alertThreshold)
 		}
 		if alertThreshold == "Low" && diffVulnerabilityCount.Low > 0 {
+			alerted = true
 			outLogDiff(alertThreshold)
 		}
 	}
