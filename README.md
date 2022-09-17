@@ -1,8 +1,10 @@
-# tvd
-## tenable vulnerability diff
+# tvd - tenable vulnerability diff
 
 tenable vulnerability diff is a pipeline utility leveraging [tenable api](https://developer.tenable.com/reference/navigate)
 to check you haven't introduced new vulnerabilities into your deployment.
+
+![190847683-b2d78322-f1fa-45c5-a5b2-00e36ea789d2](https://user-images.githubusercontent.com/80027170/190847760-86c7ece8-2ea1-48d8-8066-9d5f13ca6478.png)
+
 
 ## authentication
  authentication is handled by storing a tenable api key in an environment variable TENABLE_API_KEY 
@@ -24,10 +26,15 @@ tvd run [flags]
 | --high       | -h         | bool   |if set to false will omit high results                                   | true    | no        |
 | --medium     | -m         | bool   |if set to false will omit medium results                                 | true    | no        |
 | --low        | -l         | bool   |if set to false will omit low results                                    | true    | no        |
-| --no-scan    | -n         | bool   |runs the diff without triggering a new scan                              | false   | no        |
 | --exit-with-error | -e         | bool   |returns errorcode 1 if increase to vulnerabilities                       | false   | no        |
 | --top        | -t         | int    |clamp the number of vulnerabilities <br/> returned in NewVulnerabilities | 30      | no        |
 | --verbose    | -v         | int    |Displays Logging                                        | 0       | no        |
+
+#### development 
+these are not intended for deployment. 
+| flags        | short hand | type   |description                                                              | default | mandatory |
+|--------------|------------|--------|------------------------------------------------------------------------|---------|-----------|
+| --no-scan    | -n         | bool   |runs the diff without triggering a new scan so you dont have to wait                              | false   | no        |
 
 ### ci example
 
