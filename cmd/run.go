@@ -211,7 +211,7 @@ returns json object with count difference and list of vulnerabilities listed in 
 
 		filteredVulnerabilityDifference := alertThresholdFilterVulnerabilityCount(diffVulnerabilityCount)
 		filteredDiffVulnerabilities := alertThresholdFilterVulnerabilities(diffVulnerabilities)
-		filteredDiffVulnerabilities = SortVulnerabilities(filteredDiffVulnerabilities)
+		filteredDiffVulnerabilities = sortVulnerabilities(filteredDiffVulnerabilities)
 
 		if len(filteredDiffVulnerabilities) > top {
 			filteredDiffVulnerabilities = filteredDiffVulnerabilities[:top]
@@ -227,7 +227,7 @@ returns json object with count difference and list of vulnerabilities listed in 
 			log.Errorf("Failed to marshal diff count output")
 			os.Exit(1)
 		}
-		LoggingDiff(diffVulnerabilityCount)
+		loggingDiff(diffVulnerabilityCount)
 		fmt.Println(string(response))
 		if exitWithError {
 			os.Exit(1)
@@ -269,7 +269,7 @@ func vulnerabilityCounter(details req.ScanDetails) VulnerabilityCount {
 	return returnCount
 }
 
-func SortVulnerabilities(vulnerabilities []req.Vulnerability) []req.Vulnerability {
+func sortVulnerabilities(vulnerabilities []req.Vulnerability) []req.Vulnerability {
 
 	sort.Slice(
 		vulnerabilities, func(i, j int) bool {
@@ -279,8 +279,8 @@ func SortVulnerabilities(vulnerabilities []req.Vulnerability) []req.Vulnerabilit
 	return vulnerabilities
 }
 
-//LoggingDiff Qualifies if results in the diff are worth being and asked to be logged.
-func LoggingDiff(diffVulnerabilityCount VulnerabilityCount) {
+//loggingDiff Qualifies if results in the diff are worth being and asked to be logged.
+func loggingDiff(diffVulnerabilityCount VulnerabilityCount) {
 
 	for _, alertThreshold := range alertThresholdList {
 
